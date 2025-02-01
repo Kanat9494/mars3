@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_fade/image_fade.dart';
+import 'package:mars3/chat_screen.dart';
+import 'package:mars3/profile_page.dart';
+import 'package:mars3/search_screen.dart';
 import 'package:mars3/second.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart' as from_library;
@@ -41,28 +44,25 @@ class _MyHomePageState extends State<MyHomePage> {
   final ScrollController _scrollController = ScrollController();
   double _bottomBarHeight = 60.0;
   late final ScrollListener _scrollListener;
+  int _selectedIndex = 0;
+
+  late List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
 
     _scrollListener = ScrollListener.initialize(_scrollController);
+
+    _pages = [
+      HomePage(scrollController: _scrollController),
+      const SearchPage(),
+      const EmptyPage(title: "Добавить"),
+      const ChatScreen(),
+      const ProfileBaseScreen()
+    ];
   }
 
-//   @override
-//   void initState(){
-//     super.initState();
-
-//     _scrollController.addListener(() {
-// if (_scrollController.position.userScrollDirection ==
-//         ScrollDirection.reverse) {
-//           hideBottomBar();
-//         }
-//         else {
-//           showBottomBar();
-//         }
-//     });
-//   }
 
   @override
   void dispose() {
@@ -84,6 +84,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
 //Setting SysemUIOverlay
@@ -98,16 +105,195 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return Scaffold(
+      extendBody: true,
         backgroundColor: const Color.fromARGB(235, 236, 235, 235),
-        body: CustomScrollView(
+        body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+        //  floatingActionButton:  Container(
+        //       width: double.infinity, // Растягиваем на всю ширину
+        //       padding: EdgeInsets.symmetric(horizontal: 16.0), // Произвольные отступы по бокам
+        //       child: FloatingActionButton(
+        //         onPressed: () {
+        //           // Handle button press
+        //         },
+        //         backgroundColor: const Color.fromARGB(255, 22, 9, 206),
+        //         tooltip: 'Increment',
+        //         child: const Text('В корзину', style: TextStyle(color: Colors.white, fontSize: 18)),
+        //       ),),
+        //     floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        bottomNavigationBar: AnimatedBuilder(
+          animation: _scrollListener,
+          
+          builder: (context, child) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: _scrollListener._isVisible ? _bottomBarHeight : 0,
+              child: child,
+            );
+          },
+          child: BottomNavigationBar(
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            showSelectedLabels: true,
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            showUnselectedLabels: true,
+            selectedItemColor: const Color.fromARGB(255, 0, 0, 179), // Синий цвет для активной вкладки
+        unselectedItemColor: Colors.black,
+        
+        type: BottomNavigationBarType.fixed,
+            items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Главная'),
+          BottomNavigationBarItem(icon: Icon(Icons.search, ), label: 'Поиск'),
+          BottomNavigationBarItem(icon: Icon(Icons.add, size: 45), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.message_outlined, ), label: 'Чаты'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined, ), label: 'Профиль'),
+        ],
+          ),
+        ));
+  }
+}
+
+class MarketplaceItemCard extends StatelessWidget {
+  final Item item;
+
+  // const MarketplaceItemCard({Key? key, required this.item}) : super(key: key);
+  const MarketplaceItemCard({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(3.0),
+      height: 370,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  // child: CachedNetworkImage(
+                  //   imageUrl: item.imageUrl,
+                  //   fit: BoxFit.cover,
+                  //   width: double.infinity,
+                  //   height: 225.0,
+                  //   memCacheHeight: 225,
+                  // ),
+                  child: ImageFade(
+                    width: double.infinity,
+                    height: 225,
+                    image: NetworkImage(item.imageUrl),
+                    duration: const Duration(milliseconds: 900),
+                    fit: BoxFit.cover,
+                    placeholder: Container(
+                      color: const Color(0xFFCFCDCA),
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.photo,
+                          color: Colors.white30, size: 128.0),
+                    ),
+                    loadingBuilder: (context, progress, chunkEvent) => Center(
+                        child: CircularProgressIndicator(value: progress)),
+                  )),
+              const SizedBox(height: 8.0),
+              Text(
+                item.name,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4.0),
+              Text(
+                item.category ?? "Нет",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 4.0),
+              Text(
+                item.additionalInfo ?? "Нет",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0, top: 10.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Отображаем снэкбар
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Товар добавлен в корзину'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 0, 179), // Цвет кнопки
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0), // Закругление
+                    ),
+                  ),
+                  child: const Text(
+                    'В корзину',
+                    style: TextStyle(color: Colors.white),
+                  ),)
+                ),),
+            ],
+          ),
+          Positioned.fill(
+            child: Material(
+              color: const Color.fromARGB(0, 0, 0, 0),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(20.0),
+                splashColor:
+                    const Color.fromARGB(85, 0, 0, 0), // Цвет волны при нажатии
+                highlightColor: const Color.fromARGB(0, 0, 0, 0),
+                splashFactory: InkRipple.splashFactory,
+                radius: 220.0,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          const SliverPage(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
+class HomePage extends StatelessWidget {
+  final ScrollController scrollController;
+
+  const HomePage({super.key, required this.scrollController});
+  
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
           // cacheExtent: 1200.0,
-          controller: _scrollController,
+          controller: scrollController,
           slivers: [
             SliverAppBar(
               expandedHeight: 100.0,
               toolbarHeight: 100.0,
               floating: true,
-              backgroundColor: const Color.fromARGB(255, 22, 9, 206),
+              backgroundColor: const Color.fromARGB(255, 0, 0, 179),
+              // backgroundColor: const Color.fromARGB(255, 22, 9, 206), // старый фон
               // backgroundColor:
               //     const Color.fromARGB(255, 22, 9, 206), // Розовый фон
               shape: const RoundedRectangleBorder(
@@ -154,54 +340,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-              // flexibleSpace: FlexibleSpaceBar(
-              //   titlePadding: const EdgeInsets.only(left: 0, right: 0),
-              //  centerTitle: true,
-              //   title: Container(
-              //     decoration: const BoxDecoration(
-              //   color:  Color.fromARGB(255, 22, 9, 206),
-              //   borderRadius: BorderRadius.only(
-              //     bottomLeft:
-              //         Radius.circular(20), // Закругление левого нижнего угла
-              //     bottomRight:
-              //         Radius.circular(20), // Закругление правого нижнего угла
-              //   ),
-              // ),
-
-              //     child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.start,
-              //     children: [
-              //       const SizedBox(
-              //         height: 70.0,
-              //       ),
-              //       const Text(
-              //         'Текст по середине',
-              //         style: TextStyle(
-              //           color: Colors.white,
-              //           fontSize: 16.0,
-              //         ),
-              //       ),
-              //       const SizedBox(height: 8.0),
-              //       Container(
-              //         margin: const EdgeInsets.symmetric(horizontal: 6.0),
-              //         height: 35.0,
-              //         decoration: BoxDecoration(
-              //           color: Colors.white,
-              //           borderRadius: BorderRadius.circular(10.0),
-              //         ),
-              //         child: const TextField(
-              //           decoration: InputDecoration(
-              //             hintText: 'Поиск',
-              //             hintStyle: TextStyle(fontSize: 14.0),
-              //             border: InputBorder.none,
-              //             icon: Icon(Icons.search),
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              //   )
-              // ),
+              
             ),
             SliverToBoxAdapter(
               child: Container(
@@ -497,151 +636,7 @@ class _MyHomePageState extends State<MyHomePage> {
 // )
                     )),
           ],
-        ),
-        //  floatingActionButton:  Container(
-        //       width: double.infinity, // Растягиваем на всю ширину
-        //       padding: EdgeInsets.symmetric(horizontal: 16.0), // Произвольные отступы по бокам
-        //       child: FloatingActionButton(
-        //         onPressed: () {
-        //           // Handle button press
-        //         },
-        //         backgroundColor: const Color.fromARGB(255, 22, 9, 206),
-        //         tooltip: 'Increment',
-        //         child: const Text('В корзину', style: TextStyle(color: Colors.white, fontSize: 18)),
-        //       ),),
-        //     floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        bottomNavigationBar: AnimatedBuilder(
-          animation: _scrollListener,
-          builder: (context, child) {
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: _scrollListener._isVisible ? _bottomBarHeight : 0,
-              child: child,
-            );
-          },
-          child: BottomNavigationBar(
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined, size: 35), label: ''),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle_outlined, size: 35),
-                  label: '')
-            ],
-          ),
-        ));
-  }
-}
-
-class MarketplaceItemCard extends StatelessWidget {
-  final Item item;
-
-  // const MarketplaceItemCard({Key? key, required this.item}) : super(key: key);
-  const MarketplaceItemCard({super.key, required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(3.0),
-      height: 370,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  // child: CachedNetworkImage(
-                  //   imageUrl: item.imageUrl,
-                  //   fit: BoxFit.cover,
-                  //   width: double.infinity,
-                  //   height: 225.0,
-                  //   memCacheHeight: 225,
-                  // ),
-                  child: ImageFade(
-                    width: double.infinity,
-                    height: 225,
-                    image: NetworkImage(item.imageUrl),
-                    duration: const Duration(milliseconds: 900),
-                    fit: BoxFit.cover,
-                    placeholder: Container(
-                      color: const Color(0xFFCFCDCA),
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.photo,
-                          color: Colors.white30, size: 128.0),
-                    ),
-                    loadingBuilder: (context, progress, chunkEvent) => Center(
-                        child: CircularProgressIndicator(value: progress)),
-                  )),
-              const SizedBox(height: 8.0),
-              Text(
-                item.name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4.0),
-              Text(
-                item.category ?? "Нет",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 4.0),
-              Text(
-                item.additionalInfo ?? "Нет",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-              ),
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.only(bottom: 10.0, top: 10.0),
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: const Color.fromARGB(255, 22, 9, 206),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        10.0), // Указываете радиус закругления
-                  ),
-                  child: const Text('В корзину',
-                      style: TextStyle(color: Colors.white)),
-                ),
-              )),
-            ],
-          ),
-          Positioned.fill(
-            child: Material(
-              color: const Color.fromARGB(0, 0, 0, 0),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(20.0),
-                splashColor:
-                    const Color.fromARGB(85, 0, 0, 0), // Цвет волны при нажатии
-                highlightColor: const Color.fromARGB(0, 0, 0, 0),
-                splashFactory: InkRipple.splashFactory,
-                radius: 220.0,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) =>
-                          const SliverPage(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                },
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+        );
   }
 }
 
@@ -738,6 +733,18 @@ class PopularItemCard extends StatelessWidget {
 //     fadeInDuration: Duration.zero,),
 //   )
 // );
+
+class EmptyPage extends StatelessWidget {
+  final String title;
+  const EmptyPage({required this.title, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: Text(title, style: const TextStyle(fontSize: 24))),
+    );
+  }
+}
 
 final List<Widget> images = [
   Hero(
