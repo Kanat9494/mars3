@@ -8,11 +8,11 @@ class ProfileBaseScreen extends StatefulWidget {
 }
 
 class _ProfileBaseScreenState extends State<ProfileBaseScreen> {
+  final PageStorageBucket _bucket = PageStorageBucket();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        
         preferredSize: Size.fromHeight(60),
         child: Container(
           decoration: BoxDecoration(
@@ -42,12 +42,9 @@ class _ProfileBaseScreenState extends State<ProfileBaseScreen> {
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(
-                  Icons.notifications_outlined,
-                  color: Colors.black,
-                  size: 30
-                ),
-                onPressed: (){},
+                icon: Icon(Icons.notifications_outlined,
+                    color: Colors.black, size: 30),
+                onPressed: () {},
               )
             ],
           ),
@@ -56,93 +53,101 @@ class _ProfileBaseScreenState extends State<ProfileBaseScreen> {
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
-          headerSliverBuilder: (context, _) {
-            return [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    profileHeaderWidget(),
-                  ],
-                ),
-              ),
-            ];
-          },
-          body: Column(
-            children: <Widget>[
-              Material(
-                color: Colors.white,
-                child: TabBar(
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey[400],
-                  indicatorWeight: 1,
-                  indicatorColor: Colors.black,
-                  tabs: [
-                    Tab(icon: Icon(Icons.grid_on)),
-                  Tab(icon: Icon(Icons.favorite_border)),
-                  Tab(icon: Icon(Icons.bookmark_border)),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                // Первая вкладка - Фотографии
-                GridView.builder(
-                  key: PageStorageKey('photosTab'),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 3,
-                    mainAxisSpacing: 3,
+            headerSliverBuilder: (context, _) {
+              return [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      profileHeaderWidget(),
+                    ],
                   ),
-                  itemCount: 100,
-                  itemBuilder: (context, index) {
-                    return buildImage(index);
-                  },
                 ),
+              ];
+            },
+            body: PageStorage(
+              bucket: _bucket,
+              child: Column(
+                children: <Widget>[
+                  Material(
+                    color: Colors.white,
+                    child: TabBar(
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.grey[400],
+                      indicatorWeight: 1,
+                      indicatorColor: Colors.black,
+                      tabs: [
+                        Tab(
+                            icon: Icon(
+                          Icons.grid_on,
+                          size: 30.0,
+                        )),
+                        Tab(icon: Icon(Icons.favorite_border, size: 30.0)),
+                        Tab(icon: Icon(Icons.bookmark_border, size: 30.0)),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        // Первая вкладка - Фотографии
+                        GridView.builder(
+                          key: PageStorageKey('photosTab'),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 3,
+                            mainAxisSpacing: 3,
+                          ),
+                          itemCount: 100,
+                          itemBuilder: (context, index) {
+                            return buildImage(index);
+                          },
+                        ),
 
-                // Вторая вкладка - Лайкнутые фотографии
-                GridView.builder(
-                  key: PageStorageKey('liked'),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 3,
-                    mainAxisSpacing: 3,
-                  ),
-                  itemCount: 200,
-                  itemBuilder: (context, index) {
-                    return buildImage(index);
-                  },
-                ),
+                        // Вторая вкладка - Лайкнутые фотографии
+                        GridView.builder(
+                          key: PageStorageKey('liked'),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 3,
+                            mainAxisSpacing: 3,
+                          ),
+                          itemCount: 200,
+                          itemBuilder: (context, index) {
+                            return buildImage(index);
+                          },
+                        ),
 
-                // Третья вкладка - Забронированные фотографии
-                GridView.builder(
-                  key: PageStorageKey('saved'),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 3,
-                    mainAxisSpacing: 3,
+                        // Третья вкладка - Забронированные фотографии
+                        GridView.builder(
+                          key: PageStorageKey('saved'),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 3,
+                            mainAxisSpacing: 3,
+                          ),
+                          itemCount: 300,
+                          itemBuilder: (context, index) {
+                            return buildImage(index);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  itemCount: 300,
-                  itemBuilder: (context, index) {
-                    return buildImage(index);
-                  },
-                ),
-              ],
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
+            )),
       ),
     );
   }
 }
 
-  Widget buildImage(int index) {
-    return Image.network('https://picsum.photos/id/$index/200/300', fit: BoxFit.cover);
-  }
-
-
+Widget buildImage(int index) {
+  return Image.network('https://picsum.photos/id/$index/200/300',
+      fit: BoxFit.cover);
+}
 
 Widget profileHeaderWidget() {
   return Container(
@@ -281,8 +286,8 @@ Widget profileHeaderWidget() {
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage('https://picsum.photos/id/$index/200/300'),
+                              backgroundImage: NetworkImage(
+                                  'https://picsum.photos/id/$index/200/300'),
                               radius: 28,
                             ),
                           ),
@@ -319,12 +324,12 @@ Widget actions() {
           style: ElevatedButton.styleFrom(
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               minimumSize: Size(0, 50),
-                          backgroundColor:const Color.fromARGB(255, 0, 0, 179)
-),
+              backgroundColor: const Color.fromARGB(255, 0, 0, 179)),
           onPressed: () {},
           child: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 50),
-            child: Text("Edit Profile", style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+            child: Text("Edit Profile",
+                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
           ),
         ),
       ),

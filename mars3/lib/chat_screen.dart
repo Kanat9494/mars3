@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +10,9 @@ class ChatScreen extends StatelessWidget {
         scrolledUnderElevation: 0.0,
         title: Text(
           'Чаты',
-          style: TextStyle(color: const Color.fromARGB(255, 0, 0, 179), fontWeight: FontWeight.bold), // Текст белый
+          style: TextStyle(
+              color: const Color.fromARGB(255, 0, 0, 179),
+              fontWeight: FontWeight.bold), // Текст белый
         ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         actions: [
@@ -28,7 +28,8 @@ class ChatScreen extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.settings,
-              color: const Color.fromARGB(255, 0, 0, 0), // Иконка настроек белая
+              color:
+                  const Color.fromARGB(255, 0, 0, 0), // Иконка настроек белая
             ),
             onPressed: () {
               // Действие при нажатии на иконку настроек
@@ -37,6 +38,7 @@ class ChatScreen extends StatelessWidget {
         ],
       ),
       body: Container(
+        key: PageStorageKey('chatScreenRootKey'),
         color: Colors.white, // Белый фон для всего тела
         child: ListView.builder(
           itemCount: chats.length,
@@ -51,14 +53,14 @@ class ChatScreen extends StatelessWidget {
 }
 
 final List<Chat> chats = List.generate(200, (index) {
-    return Chat(
-      name: 'User ${index + 1}',
-      lastMessage: 'Last message from User ${index + 1}...',
-      lastLogin: '$index hours ago', // случайное время
-      isDelivered: true, // случайное значение для delivered
-      avatarUrl: 'https://picsum.photos/id/$index/200/300', // случайные URL
-    );
-  });
+  return Chat(
+    name: 'User ${index + 1}',
+    lastMessage: 'Last message from User ${index + 1}...',
+    lastLogin: '$index hours ago', // случайное время
+    isDelivered: true, // случайное значение для delivered
+    avatarUrl: 'https://picsum.photos/id/$index/200/300', // случайные URL
+  );
+});
 
 class Chat {
   final String name;

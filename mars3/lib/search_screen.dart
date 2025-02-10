@@ -9,6 +9,7 @@ class SearchPage extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: MySearchAppBar(),
       body: GridView.builder(
+        key: PageStorageKey('searchScreenRootKey'),
         padding: EdgeInsets.all(10),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, // 2 столбца
@@ -26,11 +27,12 @@ class SearchPage extends StatelessWidget {
 }
 
 final List<Category> categories = List.generate(100, (index) {
-    return Category(
-      name: 'Category ${index + 1}',
-      imageUrl: 'https://picsum.photos/id/$index/200/300', // случайное изображение
-    );
-  });
+  return Category(
+    name: 'Category ${index + 1}',
+    imageUrl:
+        'https://picsum.photos/id/$index/200/300', // случайное изображение
+  );
+});
 
 class Category {
   final String name;
@@ -55,30 +57,28 @@ class CategoryTile extends StatelessWidget {
         ),
       ),
       child: Center(
-  child: 
-    
-    Align(
-      alignment: Alignment.bottomCenter, // Это выравнивает текст по низу
-      child: Container(
-        padding: EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: const Color.fromARGB(140, 0, 0, 0),
-      borderRadius: BorderRadius.circular(10),
-    ),
-        child: Text(
-        category.name,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
+        child: Align(
+            alignment: Alignment.bottomCenter, // Это выравнивает текст по низу
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(140, 0, 0, 0),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                category.name,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )),
       ),
-      )
-    ),
-  ),
     );
   }
 }
+
 class MySearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize = Size.fromHeight(kToolbarHeight);
@@ -95,7 +95,8 @@ class MySearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           decoration: InputDecoration(
             hintText: 'Search...',
             filled: true,
-            fillColor: const Color.fromARGB(255, 247, 245, 245), // Легкий серый фон
+            fillColor:
+                const Color.fromARGB(255, 247, 245, 245), // Легкий серый фон
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0), // Закругленные края
               borderSide: BorderSide.none,
@@ -111,18 +112,18 @@ class MySearchAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         TextButton(
-  onPressed: () {
-    FocusScope.of(context).requestFocus(FocusNode());
-  },
-  child: Text(
-    'Отмена',
-    style: TextStyle(
-      color: const Color.fromARGB(255, 0, 0, 179),      // Синий цвет текста
-      fontWeight: FontWeight.bold, // Жирный шрифт
-      fontSize: 16
-    ),
-  ),
-)
+          onPressed: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Text(
+            'Отмена',
+            style: TextStyle(
+                color:
+                    const Color.fromARGB(255, 0, 0, 179), // Синий цвет текста
+                fontWeight: FontWeight.bold, // Жирный шрифт
+                fontSize: 16),
+          ),
+        )
       ],
       scrolledUnderElevation: 0.0,
     );

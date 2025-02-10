@@ -40,13 +40,15 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
+  final PageController _pageController = PageController();
   double _bottomBarHeight = 60.0;
   late final ScrollListener _scrollListener;
   int _selectedIndex = 0;
 
-  late List<Widget> _pages;
+  late final List<Widget> _pages;
 
   @override
   void initState() {
@@ -62,7 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
       const ProfileBaseScreen()
     ];
   }
-
 
   @override
   void dispose() {
@@ -88,11 +89,14 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedIndex = index;
     });
+    _pageController.jumpToPage(index);
   }
 
+  final PageStorageBucket _bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
 //Setting SysemUIOverlay
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -105,12 +109,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return Scaffold(
-      extendBody: true,
+        extendBody: true,
         backgroundColor: const Color.fromARGB(235, 236, 235, 235),
-        body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
+        body: PageStorage(
+            bucket: _bucket,
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: _pages,
+            )),
         //  floatingActionButton:  Container(
         //       width: double.infinity, // Растягиваем на всю ширину
         //       padding: EdgeInsets.symmetric(horizontal: 16.0), // Произвольные отступы по бокам
@@ -125,7 +132,6 @@ class _MyHomePageState extends State<MyHomePage> {
         //     floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: AnimatedBuilder(
           animation: _scrollListener,
-          
           builder: (context, child) {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 300),
@@ -139,20 +145,38 @@ class _MyHomePageState extends State<MyHomePage> {
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
             showUnselectedLabels: true,
-            selectedItemColor: const Color.fromARGB(255, 0, 0, 179), // Синий цвет для активной вкладки
-        unselectedItemColor: Colors.black,
-        
-        type: BottomNavigationBarType.fixed,
+            selectedItemColor: const Color.fromARGB(
+                255, 0, 0, 179), // Синий цвет для активной вкладки
+            unselectedItemColor: Colors.black,
+
+            type: BottomNavigationBarType.fixed,
             items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Главная'),
-          BottomNavigationBarItem(icon: Icon(Icons.search, ), label: 'Поиск'),
-          BottomNavigationBarItem(icon: Icon(Icons.add, size: 45), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.message_outlined, ), label: 'Чаты'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined, ), label: 'Профиль'),
-        ],
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined), label: 'Главная'),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.search,
+                  ),
+                  label: 'Поиск'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.add, size: 45), label: ''),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.message_outlined,
+                  ),
+                  label: 'Чаты'),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.account_circle_outlined,
+                  ),
+                  label: 'Профиль'),
+            ],
           ),
         ));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class MarketplaceItemCard extends StatelessWidget {
@@ -221,29 +245,32 @@ class MarketplaceItemCard extends StatelessWidget {
                 ),
               ),
               Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.only(bottom: 10.0, top: 10.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Отображаем снэкбар
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Товар добавлен в корзину'),
-                        duration: Duration(seconds: 2),
+                child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0, top: 10.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Отображаем снэкбар
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Товар добавлен в корзину'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 0, 0, 179), // Цвет кнопки
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(10.0), // Закругление
+                        ),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 0, 0, 179), // Цвет кнопки
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // Закругление
-                    ),
-                  ),
-                  child: const Text(
-                    'В корзину',
-                    style: TextStyle(color: Colors.white),
-                  ),)
-                ),),
+                      child: const Text(
+                        'В корзину',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )),
+              ),
             ],
           ),
           Positioned.fill(
@@ -276,356 +303,356 @@ class MarketplaceItemCard extends StatelessWidget {
   }
 }
 
-
 class HomePage extends StatelessWidget {
   final ScrollController scrollController;
 
   const HomePage({super.key, required this.scrollController});
-  
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-          // cacheExtent: 1200.0,
-          controller: scrollController,
-          slivers: [
-            SliverAppBar(
-              expandedHeight: 100.0,
-              toolbarHeight: 100.0,
-              floating: true,
-              backgroundColor: const Color.fromARGB(255, 0, 0, 179),
-              // backgroundColor: const Color.fromARGB(255, 22, 9, 206), // старый фон
-              // backgroundColor:
-              //     const Color.fromARGB(255, 22, 9, 206), // Розовый фон
-              shape: const RoundedRectangleBorder(
+      key: PageStorageKey("mainPageKey"),
+      // cacheExtent: 1200.0,
+      controller: scrollController,
+      slivers: [
+        SliverAppBar(
+          key: PageStorageKey('sliverAppBarKey'),
+          expandedHeight: 100.0,
+          toolbarHeight: 100.0,
+          floating: true,
+          backgroundColor: const Color.fromARGB(255, 0, 0, 179),
+          // backgroundColor: const Color.fromARGB(255, 22, 9, 206), // старый фон
+          // backgroundColor:
+          //     const Color.fromARGB(255, 22, 9, 206), // Розовый фон
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20.0), // Нижний левый угол
+              bottomRight: Radius.circular(20.0), // Нижний правый угол
+            ),
+          ),
+          title: SizedBox(
+            height: 110.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10.0,
+                ),
+                const Text(
+                  'Текст по середине',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Container(
+                  height: 55.0,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0), // Добавляем отступы по горизонтали
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: const Center(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Поиск',
+                        hintStyle: TextStyle(fontSize: 22.0),
+                        border: InputBorder.none,
+                        icon: Icon(Icons.search, size: 30.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            height: 60.0,
+            decoration: const BoxDecoration(
+                color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20.0), // Нижний левый угол
-                  bottomRight: Radius.circular(20.0), // Нижний правый угол
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0))),
+            padding: const EdgeInsets.all(16.0),
+            child: const Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                "Популярные товары",
+                style: TextStyle(
+                  fontSize: 20.0, // Увеличение размера шрифта на 20
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black, // Изменение цвета текста на черный
                 ),
               ),
-              title: SizedBox(
-                height: 110.0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    const Text(
-                      'Текст по середине',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    Container(
-                      height: 55.0,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0), // Добавляем отступы по горизонтали
+            ),
+          ),
+        ),
+        DecoratedSliver(
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20.0),
+                  bottomRight: Radius.circular(20.0))),
+          sliver: SliverFixedExtentList(
+            itemExtent: 255,
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return SizedBox(
+                  height: 225,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 100,
+                      itemBuilder: (BuildContext context, int innerIndex) {
+                        // print('First row $innerIndex');
+                        final item = popularItems[index % popularItems.length];
+                        return PopularItemCard(item: item);
+                      }),
+                );
+              },
+              childCount: 1,
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(
+            height: 10.0,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: from_library.CarouselSlider(
+              options: from_library.CarouselOptions(
+                height: 200.0,
+                enlargeCenterPage: true,
+                enableInfiniteScroll: true,
+                // autoPlay: true,
+              ),
+              items: [
+                '1.jpg',
+                '2.jpg',
+                '3.jpg',
+                '4.jpg',
+                '5.jpg',
+                '6.jpg',
+              ].map((imagePath) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(10.0),
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/$imagePath'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      child: const Center(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Поиск',
-                            hintStyle: TextStyle(fontSize: 22.0),
-                            border: InputBorder.none,
-                            icon: Icon(Icons.search, size: 30.0),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(
+            height: 10.0,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0))),
+            padding: const EdgeInsets.all(16.0),
+            child: const Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                "Популярные магазины",
+                style: TextStyle(
+                  fontSize: 20.0, // Увеличение размера шрифта на 20
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black, // Изменение цвета текста на черный
+                ),
+              ),
+            ),
+          ),
+        ),
+        DecoratedSliver(
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20.0),
+                  bottomRight: Radius.circular(20.0))),
+          sliver: SliverFixedExtentList(
+            itemExtent: 255,
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return SizedBox(
+                  height: 225,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 100,
+                      itemBuilder: (BuildContext context, int innerIndex) {
+                        // print('First row $innerIndex');
+                        final item = popularItems[index % popularItems.length];
+                        return PopularItemCard(item: item);
+                      }),
+                );
+              },
+              childCount: 1,
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 10.0),
+        ),
+        SliverToBoxAdapter(
+            child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: Colors.white,
+          ),
+          padding: const EdgeInsets.all(10.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: Image.asset(
+              'assets/images/12.jpg',
+              height: 220.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+        )),
+        const SliverToBoxAdapter(
+          child: SizedBox(
+            height: 10.0,
+          ),
+        ),
+        DecoratedSliver(
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          sliver: SliverPadding(
+            padding: const EdgeInsets.only(
+                right: 10.0, left: 10.0, top: 10.0, bottom: 10.0),
+            sliver: SliverGrid.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 5.0,
+                crossAxisSpacing: 5.0,
+                childAspectRatio: 1.8,
+              ),
+              itemCount: 10,
+              addAutomaticKeepAlives: true, // Ограничиваем количество элементов
+              itemBuilder: (BuildContext context, int index) {
+                final item = popularItems[index % popularItems.length];
+
+                return Container(
+                  decoration: BoxDecoration(
+                    color: (index == 0 || index == 9)
+                        ? Colors.orange[300]
+                        : Colors.purple[100 * ((index % 9) + 1)], // Исправлено
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 90,
+                        height: 70,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5.0),
+                          child: Text(
+                            'Название товара, которое может быть довольно длинным и должно переноситься на следующую строку при необходимости',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                height: 60.0,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0))),
-                padding: const EdgeInsets.all(16.0),
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    "Популярные товары",
-                    style: TextStyle(
-                      fontSize: 20.0, // Увеличение размера шрифта на 20
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black, // Изменение цвета текста на черный
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            DecoratedSliver(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20.0),
-                      bottomRight: Radius.circular(20.0))),
-              sliver: SliverFixedExtentList(
-                itemExtent: 255,
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return SizedBox(
-                      height: 225,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 100,
-                          itemBuilder: (BuildContext context, int innerIndex) {
-                            // print('First row $innerIndex');
-                            final item =
-                                popularItems[index % popularItems.length];
-                            return PopularItemCard(item: item);
-                          }),
-                    );
-                  },
-                  childCount: 1,
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 10.0,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: from_library.CarouselSlider(
-                  options: from_library.CarouselOptions(
-                    height: 200.0,
-                    enlargeCenterPage: true,
-                    enableInfiniteScroll: true,
-                    // autoPlay: true,
-                  ),
-                  items: [
-                    '1.jpg',
-                    '2.jpg',
-                    '3.jpg',
-                    '4.jpg',
-                    '5.jpg',
-                    '6.jpg',
-                  ].map((imagePath) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/$imagePath'),
-                              fit: BoxFit.cover,
+                      const SizedBox(
+                          width: 15), // Отступ между текстом и картинкой
+                      SizedBox(
+                        width: 63,
+                        height: 92,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: CachedNetworkImage(
+                            imageUrl: item.imageUrl,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(
+                              color: Colors.grey[300], // Заглушка при загрузке
                             ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 10.0,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0))),
-                padding: const EdgeInsets.all(16.0),
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    "Популярные магазины",
-                    style: TextStyle(
-                      fontSize: 20.0, // Увеличение размера шрифта на 20
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black, // Изменение цвета текста на черный
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            DecoratedSliver(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20.0),
-                      bottomRight: Radius.circular(20.0))),
-              sliver: SliverFixedExtentList(
-                itemExtent: 255,
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return SizedBox(
-                      height: 225,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 100,
-                          itemBuilder: (BuildContext context, int innerIndex) {
-                            // print('First row $innerIndex');
-                            final item =
-                                popularItems[index % popularItems.length];
-                            return PopularItemCard(item: item);
-                          }),
-                    );
-                  },
-                  childCount: 1,
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 10.0),
-            ),
-            SliverToBoxAdapter(
-                child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: Colors.white,
-              ),
-              padding: const EdgeInsets.all(10.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: Image.asset(
-                  'assets/images/12.jpg',
-                  height: 220.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            )),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 10.0,
-              ),
-            ),
-            DecoratedSliver(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              sliver: SliverPadding(
-                  padding: const EdgeInsets.only(
-                      right: 10.0, left: 10.0, top: 10.0, bottom: 10.0),
-                  sliver: SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 5.0,
-                      crossAxisSpacing: 5.0,
-                      childAspectRatio: 1.8,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        final item = popularItems[index % popularItems.length];
-                        return Container(
-                          height: 90.0,
-                          decoration: BoxDecoration(
-                            color: (index == 0 || index == 9)
-                                ? Colors.orange[300]
-                                : Colors.purple[100 * (index % 9)],
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Row(
-                            children: [
-                              const SizedBox(
-                                width: 90,
-                                height: 70,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 5.0), // Отступы сверху и снизу
-                                  child: Text(
-                                    'Название товара, которое может быть довольно длинным и должно переноситься на следующую строку при необходимости',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                  width:
-                                      15), // Пространство между изображением и текстом
-
-                              SizedBox(
-                                width: 63,
-                                height: 92,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: CachedNetworkImage(
-                                    imageUrl: item.imageUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      childCount: 10,
-                    ),
-                  )),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 10.0),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0))),
-                padding: const EdgeInsets.all(16.0),
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    "Все товары",
-                    style: TextStyle(
-                      fontSize: 20.0, // Увеличение размера шрифта на 20
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black, // Изменение цвета текста на черный
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            DecoratedSliver(
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0))),
-                sliver: SliverPadding(
-                    padding:
-                        const EdgeInsets.only(right: 8.0, left: 8.0, top: 20.0),
-                    sliver: SliverGrid.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisExtent: 370,
-                        mainAxisSpacing: 10.0,
-                        crossAxisSpacing: 5.0,
+                        ),
                       ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return MarketplaceItemCard(item: allItems3[index]);
-                      },
-                      itemCount: 1000,
-                    )
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 10.0),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0))),
+            padding: const EdgeInsets.all(16.0),
+            child: const Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                "Все товары",
+                style: TextStyle(
+                  fontSize: 20.0, // Увеличение размера шрифта на 20
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black, // Изменение цвета текста на черный
+                ),
+              ),
+            ),
+          ),
+        ),
+        DecoratedSliver(
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20.0),
+                    bottomRight: Radius.circular(20.0))),
+            sliver: SliverPadding(
+                padding:
+                    const EdgeInsets.only(right: 8.0, left: 8.0, top: 20.0),
+                sliver: SliverGrid.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 370,
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 5.0,
+                  ),
+                  addAutomaticKeepAlives: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return MarketplaceItemCard(item: allItems3[index]);
+                  },
+                  itemCount: 1000,
+                )
 // sliver: SliverMasonryGrid.count(
 //   crossAxisCount: 2,
 //   mainAxisSpacing: 5.0,
@@ -634,9 +661,9 @@ class HomePage extends StatelessWidget {
 //     return MarketplaceItemCard(item: allItems3[index]);
 //   }
 // )
-                    )),
-          ],
-        );
+                )),
+      ],
+    );
   }
 }
 
