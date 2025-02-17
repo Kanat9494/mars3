@@ -199,29 +199,64 @@ class MarketplaceItemCard extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(20.0),
-                // child: CachedNetworkImage(
-                //   imageUrl: item.imageUrl,
-                //   fit: BoxFit.cover,
-                //   width: double.infinity,
-                //   height: 225.0,
-                //   memCacheHeight: 225,
-                //   //memCacheWidth: double.infinity,
-                // ),
-                child: ImageFade(
-                  width: double.infinity,
-                  height: 225,
-                  image: NetworkImage(item.imageUrl),
-                  duration: const Duration(milliseconds: 900),
+                child: CachedNetworkImage(
+                  imageUrl: item.imageUrl,
                   fit: BoxFit.cover,
-                  placeholder: Container(
-                    color: const Color(0xFFCFCDCA),
-                    alignment: Alignment.center,
-                    child: const Icon(Icons.photo,
-                        color: Colors.white30, size: 128.0),
-                  ),
-                  loadingBuilder: (context, progress, chunkEvent) =>
-                      Center(child: CircularProgressIndicator(value: progress)),
+                  width: double.infinity,
+                  height: 225.0,
+                  memCacheHeight: 225,
+                  //memCacheWidth: double.infinity,
                 ),
+                // child: ImageFade(
+                //   width: double.infinity,
+                //   height: 225,
+                //   image: NetworkImage(item.imageUrl),
+                //   duration: const Duration(milliseconds: 900),
+                //   fit: BoxFit.cover,
+                //   placeholder: Container(
+                //     color: const Color(0xFFCFCDCA),
+                //     alignment: Alignment.center,
+                //     child: const Icon(Icons.photo,
+                //         color: Colors.white30, size: 128.0),
+                //   ),
+                //   loadingBuilder: (context, progress, chunkEvent) =>
+                //       Center(child: CircularProgressIndicator(value: progress)),
+                // ),
+                // child: FadeInImage(
+                //   width: double.infinity,
+                //   height: 225,
+                //   fit: BoxFit.cover,
+                //   placeholder: MemoryImage(Uint8List(0)), // Пустой placeholder
+                //   image: NetworkImage(item.imageUrl),
+                //   placeholderErrorBuilder: (context, error, stackTrace) =>
+                //       Container(
+                //     color: const Color(0xFFCFCDCA),
+                //     alignment: Alignment.center,
+                //     child: const Icon(Icons.photo,
+                //         color: Colors.white30, size: 128.0),
+                //   ),
+                //   imageErrorBuilder: (context, error, stackTrace) => const Icon(
+                //     Icons.error,
+                //     color: Colors.red,
+                //   ),
+                // ),
+
+                // child: FadeInImage(
+                //   width: double.infinity,
+                //   height: 225,
+                //   fit: BoxFit.cover,
+                //   placeholder: MemoryImage(Uint8List(0)), // Пустой placeholder
+                //   image: NetworkImage(item.imageUrl),
+                //   placeholderErrorBuilder: (context, error, stackTrace) =>
+                //       Center(
+                //     child:
+                //         CircularProgressIndicator(), // Индикатор загрузки вместо контейнера
+                //   ),
+                //   imageErrorBuilder: (context, error, stackTrace) => const Icon(
+                //     Icons.error,
+                //     color: Colors.grey,
+                //   ),
+                // ),
               ),
               const SizedBox(height: 8.0),
               Text(
