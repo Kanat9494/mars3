@@ -1,0 +1,2 @@
+C:/Users/kkudaibergenov/Desktop/projects/drafts/mars3/mars3/android/app/.cxx/Debug/6y4q3t3k/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/kkudaibergenov/Desktop/projects/drafts/mars3/mars3/android/app/.cxx/Debug/6y4q3t3k/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -198,29 +198,31 @@ class MarketplaceItemCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  // child: CachedNetworkImage(
-                  //   imageUrl: item.imageUrl,
-                  //   fit: BoxFit.cover,
-                  //   width: double.infinity,
-                  //   height: 225.0,
-                  //   memCacheHeight: 225,
-                  // ),
-                  child: ImageFade(
-                    width: double.infinity,
-                    height: 225,
-                    image: NetworkImage(item.imageUrl),
-                    duration: const Duration(milliseconds: 900),
-                    fit: BoxFit.cover,
-                    placeholder: Container(
-                      color: const Color(0xFFCFCDCA),
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.photo,
-                          color: Colors.white30, size: 128.0),
-                    ),
-                    loadingBuilder: (context, progress, chunkEvent) => Center(
-                        child: CircularProgressIndicator(value: progress)),
-                  )),
+                borderRadius: BorderRadius.circular(20.0),
+                // child: CachedNetworkImage(
+                //   imageUrl: item.imageUrl,
+                //   fit: BoxFit.cover,
+                //   width: double.infinity,
+                //   height: 225.0,
+                //   memCacheHeight: 225,
+                //   //memCacheWidth: double.infinity,
+                // ),
+                child: ImageFade(
+                  width: double.infinity,
+                  height: 225,
+                  image: NetworkImage(item.imageUrl),
+                  duration: const Duration(milliseconds: 900),
+                  fit: BoxFit.cover,
+                  placeholder: Container(
+                    color: const Color(0xFFCFCDCA),
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.photo,
+                        color: Colors.white30, size: 128.0),
+                  ),
+                  loadingBuilder: (context, progress, chunkEvent) =>
+                      Center(child: CircularProgressIndicator(value: progress)),
+                ),
+              ),
               const SizedBox(height: 8.0),
               Text(
                 item.name,
