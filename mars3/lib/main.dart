@@ -199,14 +199,14 @@ class MarketplaceItemCard extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(20.0),
-                child: CachedNetworkImage(
-                  imageUrl: item.imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 225.0,
-                  memCacheHeight: 225,
-                  //memCacheWidth: double.infinity,
-                ),
+                // child: CachedNetworkImage(
+                //   imageUrl: item.imageUrl,
+                //   fit: BoxFit.cover,
+                //   width: double.infinity,
+                //   height: 225.0,
+                //   memCacheHeight: 225,
+                //   //memCacheWidth: double.infinity,
+                // ),
                 // child: ImageFade(
                 //   width: double.infinity,
                 //   height: 225,
@@ -241,22 +241,23 @@ class MarketplaceItemCard extends StatelessWidget {
                 //   ),
                 // ),
 
-                // child: FadeInImage(
-                //   width: double.infinity,
-                //   height: 225,
-                //   fit: BoxFit.cover,
-                //   placeholder: MemoryImage(Uint8List(0)), // Пустой placeholder
-                //   image: NetworkImage(item.imageUrl),
-                //   placeholderErrorBuilder: (context, error, stackTrace) =>
-                //       Center(
-                //     child:
-                //         CircularProgressIndicator(), // Индикатор загрузки вместо контейнера
-                //   ),
-                //   imageErrorBuilder: (context, error, stackTrace) => const Icon(
-                //     Icons.error,
-                //     color: Colors.grey,
-                //   ),
-                // ),
+                child: FadeInImage(
+                  width: double.infinity,
+                  height: 225,
+                  fadeInDuration: const Duration(milliseconds: 200),
+                  fit: BoxFit.cover,
+                  placeholder: MemoryImage(Uint8List(0)), // Пустой placeholder
+                  image: NetworkImage(item.imageUrl),
+                  placeholderErrorBuilder: (context, error, stackTrace) =>
+                      Center(
+                    child:
+                        CircularProgressIndicator(), // Индикатор загрузки вместо контейнера
+                  ),
+                  imageErrorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.error,
+                    color: Colors.grey,
+                  ),
+                ),
               ),
               const SizedBox(height: 8.0),
               Text(
