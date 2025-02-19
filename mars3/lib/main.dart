@@ -199,6 +199,20 @@ class MarketplaceItemCard extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(20.0),
+                child: CachedNetworkImage(
+                  imageUrl: item.imageUrl,
+                  width: double.infinity,
+                  memCacheHeight: 225,
+                  height: 225,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                ),
                 // child: CachedNetworkImage(
                 //   imageUrl: item.imageUrl,
                 //   fit: BoxFit.cover,
@@ -226,38 +240,36 @@ class MarketplaceItemCard extends StatelessWidget {
                 //   width: double.infinity,
                 //   height: 225,
                 //   fit: BoxFit.cover,
-                //   placeholder: MemoryImage(Uint8List(0)), // Пустой placeholder
+                //   placeholder: NetworkImage('https://placehold.co/30x30'),
                 //   image: NetworkImage(item.imageUrl),
-                //   placeholderErrorBuilder: (context, error, stackTrace) =>
-                //       Container(
-                //     color: const Color(0xFFCFCDCA),
-                //     alignment: Alignment.center,
-                //     child: const Icon(Icons.photo,
-                //         color: Colors.white30, size: 128.0),
-                //   ),
                 //   imageErrorBuilder: (context, error, stackTrace) => const Icon(
                 //     Icons.error,
                 //     color: Colors.red,
                 //   ),
                 // ),
 
-                child: FadeInImage(
-                  width: double.infinity,
-                  height: 225,
-                  fadeInDuration: const Duration(milliseconds: 200),
-                  fit: BoxFit.cover,
-                  placeholder: MemoryImage(Uint8List(0)), // Пустой placeholder
-                  image: NetworkImage(item.imageUrl),
-                  placeholderErrorBuilder: (context, error, stackTrace) =>
-                      Center(
-                    child:
-                        CircularProgressIndicator(), // Индикатор загрузки вместо контейнера
-                  ),
-                  imageErrorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.error,
-                    color: Colors.grey,
-                  ),
-                ),
+                // child: SizedBox(
+                //   height: 225,
+                //   child: FadeInImage(
+                //     width: double.infinity,
+                //     height: 225,
+                //     //fadeInDuration: const Duration(mi),
+                //     fit: BoxFit.cover,
+                //     placeholder:
+                //         MemoryImage(Uint8List(0)), // Пустой placeholder
+                //     image: NetworkImage(item.imageUrl),
+                //     placeholderErrorBuilder: (context, error, stackTrace) =>
+                //         Center(
+                //       child:
+                //           CircularProgressIndicator(), // Индикатор загрузки вместо контейнера
+                //     ),
+                //     imageErrorBuilder: (context, error, stackTrace) =>
+                //         const Icon(
+                //       Icons.error,
+                //       color: Colors.grey,
+                //     ),
+                //   ),
+                // )
               ),
               const SizedBox(height: 8.0),
               Text(
@@ -283,7 +295,9 @@ class MarketplaceItemCard extends StatelessWidget {
                   color: Colors.grey[600],
                 ),
               ),
-              Expanded(
+              SizedBox(
+                width: double.infinity,
+                height: 60,
                 child: Padding(
                     padding: const EdgeInsets.only(bottom: 10.0, top: 10.0),
                     child: ElevatedButton(
@@ -580,20 +594,22 @@ class PopularShopsList extends StatelessWidget {
         itemExtent: 255,
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            return SizedBox(
-              height: 225,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 100,
-                  itemBuilder: (BuildContext context, int innerIndex) {
-                    // print('First row $innerIndex');
-                    final item = Item(
-                        imageUrl:
-                            'https://picsum.photos/id/$innerIndex/200/300',
-                        name: 'Item $innerIndex',
-                        price: 'Price $innerIndex');
-                    return PopularItemCard(item: item);
-                  }),
+            return RepaintBoundary(
+              child: SizedBox(
+                height: 225,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 100,
+                    itemBuilder: (BuildContext context, int innerIndex) {
+                      // print('First row $innerIndex');
+                      final item = Item(
+                          imageUrl:
+                              'https://picsum.photos/id/$innerIndex/200/300',
+                          name: 'Item $innerIndex',
+                          price: 'Price $innerIndex');
+                      return PopularItemCard(item: item);
+                    }),
+              ),
             );
           },
           childCount: 1,
@@ -754,18 +770,21 @@ class AllGoodsGrid extends StatelessWidget {
                 bottomRight: Radius.circular(20.0))),
         sliver: SliverPadding(
             padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 20.0),
-            sliver: SliverGrid.builder(
+            sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisExtent: 370,
                 mainAxisSpacing: 10.0,
                 crossAxisSpacing: 5.0,
               ),
-              addAutomaticKeepAlives: true,
-              itemBuilder: (BuildContext context, int index) {
-                return MarketplaceItemCard(item: allItems3[index]);
-              },
-              itemCount: 1000,
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return RepaintBoundary(
+                    child: MarketplaceItemCard(item: allItems3[index]),
+                  );
+                },
+                childCount: 1000, // Ограничиваем количество элементов
+              ),
             )
 // sliver: SliverMasonryGrid.count(
 //   crossAxisCount: 2,
@@ -790,6 +809,7 @@ class HomePage extends StatelessWidget {
       //key: PageStorageKey("mainPageKey"),
       // cacheExtent: 1200.0,
       controller: scrollController,
+      cacheExtent: 1200,
       slivers: [
         const CustomAppBar(),
         const PopularGoodsTitle(),
