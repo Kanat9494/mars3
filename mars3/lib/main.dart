@@ -202,17 +202,21 @@ class MarketplaceItemCard extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: item.imageUrl,
                   width: double.infinity,
-                  memCacheHeight: 225,
-                  height: 225,
+                  memCacheHeight: 200,
+                  memCacheWidth: 100,
+                  height: 225.0,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),
                   ),
-                  errorWidget: (context, url, error) => const Icon(
-                    Icons.error,
-                    color: Colors.red,
+                  errorWidget: (context, url, error) => Container(
+                    color: const Color(0xFFCFCDCA),
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.photo,
+                        color: Colors.white30, size: 128.0),
                   ),
                 ),
+
                 // child: CachedNetworkImage(
                 //   imageUrl: item.imageUrl,
                 //   fit: BoxFit.cover,
@@ -221,6 +225,77 @@ class MarketplaceItemCard extends StatelessWidget {
                 //   memCacheHeight: 225,
                 //   //memCacheWidth: double.infinity,
                 // ),
+                // child: ExtendedImage.network(
+                //   item.imageUrl,
+                //   width: double.infinity,
+                //   height: 225,
+                //   fit: BoxFit.cover,
+                //   loadStateChanged: (ExtendedImageState state) {
+                //     switch (state.extendedImageLoadState) {
+                //       case LoadState.loading:
+                //         final double? progress =
+                //             state.loadingProgress as double?;
+                //         return Container(
+                //           color: const Color(0xFFCFCDCA),
+                //           alignment: Alignment.center,
+                //           child: progress != null
+                //               ? CircularProgressIndicator(value: progress)
+                //               : const Icon(Icons.photo,
+                //                   color: Colors.white30, size: 128.0),
+                //         );
+                //       case LoadState.completed:
+                //         return null; // Отображается само изображение
+                //       case LoadState.failed:
+                //         return Container(
+                //           color: const Color(0xFFCFCDCA),
+                //           alignment: Alignment.center,
+                //           child: const Icon(Icons.error, color: Colors.red),
+                //         );
+                //     }
+                //   },
+                // )
+                // child: ExtendedImage.network(
+                //   item.imageUrl,
+                //   width: double.infinity,
+                //   height: 225,
+                //   fit: BoxFit.cover,
+                //   mode: ExtendedImageMode.gesture, // Включаем режим жестов
+                //   initGestureConfigHandler: (state) {
+                //     return GestureConfig(
+                //       minScale: 1.0, // минимальный масштаб
+                //       maxScale:
+                //           3.0, // максимальный масштаб (можете увеличить по необходимости)
+                //       speed: 1.0,
+                //       inertialSpeed: 100.0,
+                //       initialScale: 1.0, // начальный масштаб
+                //       inPageView: false,
+                //     );
+                //   },
+                //   loadStateChanged: (ExtendedImageState state) {
+                //     switch (state.extendedImageLoadState) {
+                //       case LoadState.loading:
+                //         final double? progress =
+                //             state.loadingProgress as double?;
+                //         return Container(
+                //           color: const Color(0xFFCFCDCA),
+                //           alignment: Alignment.center,
+                //           child: progress != null
+                //               ? CircularProgressIndicator(value: progress)
+                //               : const Icon(Icons.photo,
+                //                   color: Colors.white30, size: 128.0),
+                //         );
+                //       case LoadState.completed:
+                //         return null; // Возвращаем null, чтобы отобразить изображение как есть
+                //       case LoadState.failed:
+                //         return Container(
+                //           color: const Color(0xFFCFCDCA),
+                //           alignment: Alignment.center,
+                //           child: const Icon(Icons.error, color: Colors.red),
+                //         );
+                //     }
+                //   },
+                // ),
+                // очень хорошо работает
                 // child: ImageFade(
                 //   width: double.infinity,
                 //   height: 225,
@@ -233,9 +308,10 @@ class MarketplaceItemCard extends StatelessWidget {
                 //     child: const Icon(Icons.photo,
                 //         color: Colors.white30, size: 128.0),
                 //   ),
-                //   loadingBuilder: (context, progress, chunkEvent) =>
-                //       Center(child: CircularProgressIndicator(value: progress)),
+                //   loadingBuilder: (context, progress, chunkEvent) => Center(
+                //       child: CircularProgressIndicator(value: progress)),
                 // ),
+                // конец очень хорошо работает
                 // child: FadeInImage(
                 //   width: double.infinity,
                 //   height: 225,
@@ -459,27 +535,36 @@ class PopularGoodsList extends StatelessWidget {
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20.0),
               bottomRight: Radius.circular(20.0))),
-      sliver: SliverFixedExtentList(
-        itemExtent: 255,
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return SizedBox(
-              height: 225,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 100,
-                  itemBuilder: (BuildContext context, int innerIndex) {
-                    // print('First row $innerIndex');
-                    final item = Item(
-                        imageUrl:
-                            'https://picsum.photos/id/$innerIndex/200/300',
-                        name: 'Item $innerIndex',
-                        price: 'Price $innerIndex');
-                    return PopularItemCard(item: item);
-                  }),
-            );
-          },
-          childCount: 1,
+      // sliver: SliverFixedExtentList(
+      //   itemExtent: 255,
+      //   delegate: SliverChildBuilderDelegate(
+      //     (BuildContext context, int index) {
+      //       return SizedBox(
+      //         height: 225,
+      //         child: ListView.builder(
+      //             scrollDirection: Axis.horizontal,
+      //             addRepaintBoundaries: true,
+      //             itemCount: 100,
+      //             itemBuilder: (BuildContext context, int innerIndex) {
+      //               // print('First row $innerIndex');
+      //               return PopularItemCard(item: allItems3[innerIndex]);
+      //             }),
+      //       );
+      //     },
+      //     childCount: 1,
+      //   ),
+      // ),
+      sliver: SliverToBoxAdapter(
+        child: SizedBox(
+          height: 255,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 100,
+            itemBuilder: (BuildContext context, int innerIndex) {
+              // print('First row $innerIndex');
+              return PopularItemCard(item: allItems3[innerIndex]);
+            },
+          ),
         ),
       ),
     );
@@ -590,29 +675,36 @@ class PopularShopsList extends StatelessWidget {
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20.0),
               bottomRight: Radius.circular(20.0))),
-      sliver: SliverFixedExtentList(
-        itemExtent: 255,
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return RepaintBoundary(
-              child: SizedBox(
-                height: 225,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 100,
-                    itemBuilder: (BuildContext context, int innerIndex) {
-                      // print('First row $innerIndex');
-                      final item = Item(
-                          imageUrl:
-                              'https://picsum.photos/id/$innerIndex/200/300',
-                          name: 'Item $innerIndex',
-                          price: 'Price $innerIndex');
-                      return PopularItemCard(item: item);
-                    }),
-              ),
-            );
-          },
-          childCount: 1,
+      // sliver: SliverFixedExtentList(
+      //   itemExtent: 255,
+      //   delegate: SliverChildBuilderDelegate(
+      //     (BuildContext context, int index) {
+      //       return SizedBox(
+      //         height: 225,
+      //         child: ListView.builder(
+      //             scrollDirection: Axis.horizontal,
+      //             itemCount: 100,
+      //             itemBuilder: (BuildContext context, int innerIndex) {
+      //               //print('First row $innerIndex');
+
+      //               return PopularItemCard(item: allItems3[innerIndex]);
+      //             }),
+      //       );
+      //     },
+      //     childCount: 1,
+      //   ),
+      // ),
+      sliver: SliverToBoxAdapter(
+        child: SizedBox(
+          height: 255,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 100,
+            itemBuilder: (BuildContext context, int innerIndex) {
+              // print('First row $innerIndex');
+              return PopularItemCard(item: allItems3[innerIndex]);
+            },
+          ),
         ),
       ),
     );
@@ -625,22 +717,23 @@ class AdBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-        child: Container(
-      height: 220.0,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: Colors.white,
-      ),
-      padding: const EdgeInsets.all(10.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.0),
-        child: Image.asset(
-          'assets/images/12.jpg',
-          height: 220.0,
-          fit: BoxFit.cover,
+      child: Container(
+        height: 220.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: Colors.white,
+        ),
+        padding: const EdgeInsets.all(10.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20.0),
+          child: Image.asset(
+            'assets/images/2.jpg',
+            height: 220.0,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
-    ));
+    );
   }
 }
 
@@ -778,9 +871,12 @@ class AllGoodsGrid extends StatelessWidget {
                 crossAxisSpacing: 5.0,
               ),
               delegate: SliverChildBuilderDelegate(
+                addRepaintBoundaries: true,
+                addAutomaticKeepAlives: true,
                 (BuildContext context, int index) {
-                  return RepaintBoundary(
-                    child: MarketplaceItemCard(item: allItems3[index]),
+                  // print("грид $index");
+                  return MarketplaceItemCard(
+                    item: allItems3[index],
                   );
                 },
                 childCount: 1000, // Ограничиваем количество элементов
@@ -809,7 +905,7 @@ class HomePage extends StatelessWidget {
       //key: PageStorageKey("mainPageKey"),
       // cacheExtent: 1200.0,
       controller: scrollController,
-      cacheExtent: 1200,
+      //cacheExtent: 3500,
       slivers: [
         const CustomAppBar(),
         const PopularGoodsTitle(),
@@ -867,73 +963,60 @@ class PopularItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(
-            left: 16.0, right: 0.0, bottom: 16.0, top: 0.0),
-        decoration: BoxDecoration(
-          color: Colors.orange,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Material(
-          borderRadius: BorderRadius.circular(10.0),
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          color: Colors.transparent,
-          child: InkResponse(
-            splashFactory: InkRipple.splashFactory,
-            containedInkWell: true,
-            onTapDown: (details) {},
-            onTap: () {},
-            // borderRadius: BorderRadius.circular(10.0),
-
-            child: Column(
-              spacing: 16.0,
-              children: <Widget>[
-                // FadeInImage(
-                //   //placeholder: const NetworkImage('https://placehold.co/30x30'),
-                //   placeholder: NetworkImage('https://placehold.co/30x30'),
-                //   image: NetworkImage(item.imageUrl),
-                //   height: 120,
-                //   width: 120,
-                //   fit: BoxFit.cover,
-                //   imageErrorBuilder: (context, error, stackTrace) => Container(
-                //     height: 120,
-                //     width: 120,
-                //     color: Colors.grey, // Фон ошибки
-                //     child: const Icon(Icons.error, color: Colors.red),
-                //   ),
-                // ),
-                FadeInImage(
-                  placeholder: NetworkImage(
-                      'https://placehold.co/30x30'), // Используй заглушку
-                  image: NetworkImage(item.imageUrl),
-                  height: 120,
-                  width: 120,
-                  fit: BoxFit.cover,
-                  placeholderErrorBuilder: (context, error, stackTrace) =>
-                      const Center(
-                          child:
-                              CircularProgressIndicator()), // Индикатор загрузки
-                  imageErrorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.error, color: Colors.red),
-                ),
-                Text(
-                  item.name,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white, // Изменение цвета текста на белый
-                  ),
-                ),
-                Text(
-                  item.price,
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.white, // Изменение цвета текста на белый
-                  ),
-                ),
-              ],
+      margin:
+          const EdgeInsets.only(left: 16.0, right: 0.0, bottom: 16.0, top: 0.0),
+      decoration: BoxDecoration(
+        color: Colors.orange,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.center, // Чтобы тексты не расходились
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft:
+                  Radius.circular(10.0), // Закругление верхнего левого угла
+              topRight:
+                  Radius.circular(10.0), // Закругление верхнего правого угла
+            ),
+            child: FadeInImage(
+              placeholder:
+                  NetworkImage('https://placehold.co/30x30'), // Заглушка
+              image: NetworkImage(item.imageUrl),
+              height: 120.0,
+              width: 120.0,
+              fit: BoxFit.cover,
+              placeholderErrorBuilder: (context, error, stackTrace) =>
+                  const Center(
+                      child: CircularProgressIndicator()), // Индикатор загрузки
+              imageErrorBuilder: (context, error, stackTrace) => Container(
+                color: const Color(0xFFCFCDCA),
+                alignment: Alignment.center,
+                child:
+                    const Icon(Icons.photo, color: Colors.white30, size: 128.0),
+              ),
             ),
           ),
-        ));
+          SizedBox(height: 28.0), // Немного отступа между картинкой и текстом
+          Text(
+            item.name,
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // Изменение цвета текста на белый
+            ),
+          ),
+          Text(
+            item.price,
+            style: const TextStyle(
+              fontSize: 14.0,
+              color: Colors.white, // Изменение цвета текста на белый
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
