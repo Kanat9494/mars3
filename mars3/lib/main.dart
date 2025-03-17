@@ -201,183 +201,6 @@ class MarketplaceItemCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // Container(
-              //   decoration: BoxDecoration(
-              //     color: const Color.fromARGB(255, 221, 224, 223),
-              //     borderRadius:
-              //         BorderRadius.circular(20.0), // Закругляет весь контейнер
-              //   ),
-              //   height: height - 145,
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(20.0),
-              //     // child: CachedNetworkImage(
-              //     //   imageUrl: item.imageUrl,
-              //     //   width: double.infinity,
-              //     //   memCacheHeight: 200,
-              //     //   memCacheWidth: 100,
-              //     //   useOldImageOnUrlChange:
-              //     //       false, // Не использовать старое изображение при смене URL
-              //     //   cacheManager: null,
-              //     //   //height: 225.0,
-              //     //   height: height - 145,
-              //     //   fit: BoxFit.cover,
-              //     //   placeholder: (context, url) => Center(
-              //     //     child: CircularProgressIndicator(),
-              //     //   ),
-              //     //   errorWidget: (context, url, error) => Container(
-              //     //     color: const Color(0xFFCFCDCA),
-              //     //     alignment: Alignment.center,
-              //     //     child: const Icon(Icons.photo,
-              //     //         color: Colors.white30, size: 128.0),
-              //     //   ),
-              //     // ),
-              //     // child: ExtendedImage.network(
-              //     //   item.imageUrl,
-              //     //   width: double.infinity,
-              //     //   height: 225,
-              //     //   fit: BoxFit.cover,
-              //     //   loadStateChanged: (ExtendedImageState state) {
-              //     //     switch (state.extendedImageLoadState) {
-              //     //       case LoadState.loading:
-              //     //         final double? progress =
-              //     //             state.loadingProgress as double?;
-              //     //         return Container(
-              //     //           color: const Color(0xFFCFCDCA),
-              //     //           alignment: Alignment.center,
-              //     //           child: progress != null
-              //     //               ? CircularProgressIndicator(value: progress)
-              //     //               : const Icon(Icons.photo,
-              //     //                   color: Colors.white30, size: 128.0),
-              //     //         );
-              //     //       case LoadState.completed:
-              //     //         return null; // Отображается само изображение
-              //     //       case LoadState.failed:
-              //     //         return Container(
-              //     //           color: const Color(0xFFCFCDCA),
-              //     //           alignment: Alignment.center,
-              //     //           child: const Icon(Icons.error, color: Colors.red),
-              //     //         );
-              //     //     }
-              //     //   },
-              //     // )
-              //     // child: ExtendedImage.network(
-              //     //   item.imageUrl,
-              //     //   width: double.infinity,
-              //     //   height: 225,
-              //     //   fit: BoxFit.cover,
-              //     //   mode: ExtendedImageMode.gesture, // Включаем режим жестов
-              //     //   initGestureConfigHandler: (state) {
-              //     //     return GestureConfig(
-              //     //       minScale: 1.0, // минимальный масштаб
-              //     //       maxScale:
-              //     //           3.0, // максимальный масштаб (можете увеличить по необходимости)
-              //     //       speed: 1.0,
-              //     //       inertialSpeed: 100.0,
-              //     //       initialScale: 1.0, // начальный масштаб
-              //     //       inPageView: false,
-              //     //     );
-              //     //   },
-              //     //   loadStateChanged: (ExtendedImageState state) {
-              //     //     switch (state.extendedImageLoadState) {
-              //     //       case LoadState.loading:
-              //     //         final double? progress =
-              //     //             state.loadingProgress as double?;
-              //     //         return Container(
-              //     //           color: const Color(0xFFCFCDCA),
-              //     //           alignment: Alignment.center,
-              //     //           child: progress != null
-              //     //               ? CircularProgressIndicator(value: progress)
-              //     //               : const Icon(Icons.photo,
-              //     //                   color: Colors.white30, size: 128.0),
-              //     //         );
-              //     //       case LoadState.completed:
-              //     //         return null; // Возвращаем null, чтобы отобразить изображение как есть
-              //     //       case LoadState.failed:
-              //     //         return Container(
-              //     //           color: const Color(0xFFCFCDCA),
-              //     //           alignment: Alignment.center,
-              //     //           child: const Icon(Icons.error, color: Colors.red),
-              //     //         );
-              //     //     }
-              //     //   },
-              //     // ),
-              //     // очень хорошо работает
-              //     // child: ImageFade(
-              //     //   width: double.infinity,
-              //     //   height: height - 145,
-              //     //   image: NetworkImage(item.imageUrl),
-              //     //   duration: const Duration(milliseconds: 900),
-              //     //   fit: BoxFit.cover,
-              //     //   placeholder: Container(
-              //     //     color: const Color(0xFFCFCDCA),
-              //     //     alignment: Alignment.center,
-              //     //     child: const Icon(Icons.photo,
-              //     //         color: Colors.white30, size: 128.0),
-              //     //   ),
-              //     //   loadingBuilder: (context, progress, chunkEvent) => Center(
-              //     //       child: CircularProgressIndicator(value: progress)),
-              //     // ),
-              //     // конец очень хорошо работает
-              //     child: FadeInImage(
-              //       width: double.infinity,
-              //       height: 225,
-              //       fit: BoxFit.cover,
-              //       placeholder: NetworkImage('https://placehold.co/30x30'),
-              //       image: NetworkImage(item.imageUrl),
-              //       imageErrorBuilder: (context, error, stackTrace) =>
-              //           Container(
-              //         color: const Color(0xFFCFCDCA),
-              //         alignment: Alignment.center,
-              //         child: const Icon(Icons.photo,
-              //             color: Colors.white30, size: 128.0),
-              //       ),
-              //     ),
-              //     // child: FadeInImage(
-              //     //   width: double.infinity,
-              //     //   height: height - 145,
-              //     //   fit: BoxFit.cover,
-              //     //   placeholder: MemoryImage(
-              //     //       Uint8List(0)), // Пустое изображение-заглушка
-              //     //   image: NetworkImage(item.imageUrl),
-              //     //   placeholderErrorBuilder: (context, error, stackTrace) =>
-              //     //       Center(
-              //     //     child: CircularProgressIndicator(), // Индикатор загрузки
-              //     //   ),
-              //     //   imageErrorBuilder: (context, error, stackTrace) =>
-              //     //       Container(
-              //     //     color: const Color(0xFFCFCDCA),
-              //     //     alignment: Alignment.center,
-              //     //     child: const Icon(Icons.photo,
-              //     //         color: Colors.white30, size: 128.0),
-              //     //   ),
-              //     //   fadeInDuration: const Duration(milliseconds: 500),
-              //     //   fadeOutDuration: const Duration(milliseconds: 500),
-              //     // ),
-
-              //     // child: SizedBox(
-              //     //   height: 225,
-              //     //   child: FadeInImage(
-              //     //     width: double.infinity,
-              //     //     height: 225,
-              //     //     //fadeInDuration: const Duration(mi),
-              //     //     fit: BoxFit.cover,
-              //     //     placeholder:
-              //     //         MemoryImage(Uint8List(0)), // Пустой placeholder
-              //     //     image: NetworkImage(item.imageUrl),
-              //     //     placeholderErrorBuilder: (context, error, stackTrace) =>
-              //     //         Center(
-              //     //       child:
-              //     //           CircularProgressIndicator(), // Индикатор загрузки вместо контейнера
-              //     //     ),
-              //     //     imageErrorBuilder: (context, error, stackTrace) =>
-              //     //         const Icon(
-              //     //       Icons.error,
-              //     //       color: Colors.grey,
-              //     //     ),
-              //     //   ),
-              //     // )
-              //   ),
-              // ),
               Container(
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 221, 224, 223),
@@ -386,45 +209,147 @@ class MarketplaceItemCard extends StatelessWidget {
                 ),
                 height: height - 145,
                 child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(20.0), // Закругление углов
-                  child: ImageFade(
+                  //clipBehavior: Clip.antiAlias,
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: CachedNetworkImage(
+                    key: ValueKey(item.imageUrl),
+                    imageUrl: item.imageUrl,
                     width: double.infinity,
+                    memCacheHeight: 200,
+                    memCacheWidth: 100,
+                    // useOldImageOnUrlChange:
+                    //     false, // Не использовать старое изображение при смене URL
+                    // cacheManager: null,
+                    //height: 225.0,
                     height: height - 145,
-                    image: NetworkImage(item.imageUrl),
-                    duration: const Duration(milliseconds: 900),
                     fit: BoxFit.cover,
-                    placeholder: Container(
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) => Container(
                       color: const Color(0xFFCFCDCA),
                       alignment: Alignment.center,
                       child: const Icon(Icons.photo,
                           color: Colors.white30, size: 128.0),
                     ),
-                    loadingBuilder: (context, progress, chunkEvent) => Center(
-                        child: CircularProgressIndicator(value: progress)),
                   ),
-                  // child: CachedNetworkImage(
-                  //   imageUrl: item.imageUrl,
+                  // child: FastCachedImage(
+                  //   url: item.imageUrl,
                   //   width: double.infinity,
-                  //   memCacheHeight: 200,
-                  //   memCacheWidth: 100,
-                  //   useOldImageOnUrlChange:
-                  //       false, // Не использовать старое изображение при смене URL
-                  //   cacheManager: null,
-                  //   //height: 225.0,
                   //   height: height - 145,
                   //   fit: BoxFit.cover,
-                  //   placeholder: (context, url) => Center(
+                  //   fadeInDuration: const Duration(milliseconds: 900),
+                  //   loadingBuilder: (context, progress) => Center(
                   //     child: CircularProgressIndicator(),
                   //   ),
-                  //   errorWidget: (context, url, error) => Container(
+                  //   errorBuilder: (context, exception, stacktrace) => Container(
                   //     color: const Color(0xFFCFCDCA),
                   //     alignment: Alignment.center,
                   //     child: const Icon(Icons.photo,
                   //         color: Colors.white30, size: 128.0),
                   //   ),
                   // ),
-
+                  // child: ExtendedImage.network(
+                  //   item.imageUrl,
+                  //   width: double.infinity,
+                  //   height: 225,
+                  //   fit: BoxFit.cover,
+                  //   loadStateChanged: (ExtendedImageState state) {
+                  //     switch (state.extendedImageLoadState) {
+                  //       case LoadState.loading:
+                  //         final double? progress =
+                  //             state.loadingProgress as double?;
+                  //         return Container(
+                  //           color: const Color(0xFFCFCDCA),
+                  //           alignment: Alignment.center,
+                  //           child: progress != null
+                  //               ? CircularProgressIndicator(value: progress)
+                  //               : const Icon(Icons.photo,
+                  //                   color: Colors.white30, size: 128.0),
+                  //         );
+                  //       case LoadState.completed:
+                  //         return null; // Отображается само изображение
+                  //       case LoadState.failed:
+                  //         return Container(
+                  //           color: const Color(0xFFCFCDCA),
+                  //           alignment: Alignment.center,
+                  //           child: const Icon(Icons.error, color: Colors.red),
+                  //         );
+                  //     }
+                  //   },
+                  // )
+                  // child: ExtendedImage.network(
+                  //   item.imageUrl,
+                  //   width: double.infinity,
+                  //   height: 225,
+                  //   fit: BoxFit.cover,
+                  //   mode: ExtendedImageMode.gesture, // Включаем режим жестов
+                  //   initGestureConfigHandler: (state) {
+                  //     return GestureConfig(
+                  //       minScale: 1.0, // минимальный масштаб
+                  //       maxScale:
+                  //           3.0, // максимальный масштаб (можете увеличить по необходимости)
+                  //       speed: 1.0,
+                  //       inertialSpeed: 100.0,
+                  //       initialScale: 1.0, // начальный масштаб
+                  //       inPageView: false,
+                  //     );
+                  //   },
+                  //   loadStateChanged: (ExtendedImageState state) {
+                  //     switch (state.extendedImageLoadState) {
+                  //       case LoadState.loading:
+                  //         final double? progress =
+                  //             state.loadingProgress as double?;
+                  //         return Container(
+                  //           color: const Color(0xFFCFCDCA),
+                  //           alignment: Alignment.center,
+                  //           child: progress != null
+                  //               ? CircularProgressIndicator(value: progress)
+                  //               : const Icon(Icons.photo,
+                  //                   color: Colors.white30, size: 128.0),
+                  //         );
+                  //       case LoadState.completed:
+                  //         return null; // Возвращаем null, чтобы отобразить изображение как есть
+                  //       case LoadState.failed:
+                  //         return Container(
+                  //           color: const Color(0xFFCFCDCA),
+                  //           alignment: Alignment.center,
+                  //           child: const Icon(Icons.error, color: Colors.red),
+                  //         );
+                  //     }
+                  //   },
+                  // ),
+                  // очень хорошо работает
+                  // child: ImageFade(
+                  //   width: double.infinity,
+                  //   height: height - 145,
+                  //   image: NetworkImage(item.imageUrl),
+                  //   duration: const Duration(milliseconds: 900),
+                  //   fit: BoxFit.cover,
+                  //   placeholder: Container(
+                  //     color: const Color(0xFFCFCDCA),
+                  //     alignment: Alignment.center,
+                  //     child: const Icon(Icons.photo,
+                  //         color: Colors.white30, size: 128.0),
+                  //   ),
+                  //   loadingBuilder: (context, progress, chunkEvent) => Center(
+                  //       child: CircularProgressIndicator(value: progress)),
+                  // ),
+                  // конец очень хорошо работает
+                  // child: FadeInImage(
+                  //   width: double.infinity,
+                  //   height: 225,
+                  //   fit: BoxFit.cover,
+                  //   placeholder: NetworkImage('https://placehold.co/30x30'),
+                  //   image: NetworkImage(item.imageUrl),
+                  //   imageErrorBuilder: (context, error, stackTrace) =>
+                  //       Container(
+                  //     color: const Color(0xFFCFCDCA),
+                  //     alignment: Alignment.center,
+                  //     child: const Icon(Icons.photo,
+                  //         color: Colors.white30, size: 128.0),
+                  //   ),
+                  // ),
                   // child: FadeInImage(
                   //   width: double.infinity,
                   //   height: height - 145,
@@ -446,6 +371,29 @@ class MarketplaceItemCard extends StatelessWidget {
                   //   fadeInDuration: const Duration(milliseconds: 500),
                   //   fadeOutDuration: const Duration(milliseconds: 500),
                   // ),
+
+                  // child: SizedBox(
+                  //   height: 225,
+                  //   child: FadeInImage(
+                  //     width: double.infinity,
+                  //     height: 225,
+                  //     //fadeInDuration: const Duration(mi),
+                  //     fit: BoxFit.cover,
+                  //     placeholder:
+                  //         MemoryImage(Uint8List(0)), // Пустой placeholder
+                  //     image: NetworkImage(item.imageUrl),
+                  //     placeholderErrorBuilder: (context, error, stackTrace) =>
+                  //         Center(
+                  //       child:
+                  //           CircularProgressIndicator(), // Индикатор загрузки вместо контейнера
+                  //     ),
+                  //     imageErrorBuilder: (context, error, stackTrace) =>
+                  //         const Icon(
+                  //       Icons.error,
+                  //       color: Colors.grey,
+                  //     ),
+                  //   ),
+                  // )
                 ),
               ),
               const SizedBox(height: 8.0),
