@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:carousel_slider/carousel_slider.dart' as from_library;
 
-
-
 class SliverPage extends StatefulWidget {
   const SliverPage({super.key});
 
@@ -12,17 +10,17 @@ class SliverPage extends StatefulWidget {
 }
 
 class _SliverPageState extends State<SliverPage> {
- 
   @override
   Widget build(BuildContext context) {
-     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemStatusBarContrastEnforced: true,
-    // systemNavigationBarColor: Color.fromARGB(0, 0, 0, 0),
-    // systemNavigationBarDividerColor: Color.fromARGB(0, 0, 0, 0),
-    systemNavigationBarIconBrightness: Brightness.dark,
-    statusBarColor: Color.fromARGB(120, 0, 0, 0),
-    statusBarIconBrightness: Brightness.light),
-);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+          systemStatusBarContrastEnforced: true,
+          // systemNavigationBarColor: Color.fromARGB(0, 0, 0, 0),
+          // systemNavigationBarDividerColor: Color.fromARGB(0, 0, 0, 0),
+          systemNavigationBarIconBrightness: Brightness.dark,
+          statusBarColor: Color.fromARGB(120, 0, 0, 0),
+          statusBarIconBrightness: Brightness.light),
+    );
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 219, 217, 217),
         body: CustomScrollView(
@@ -127,7 +125,7 @@ Widget _buildProductImages(BuildContext context) {
     options: from_library.CarouselOptions(
       height: 400.0, // Высота карусели
       enableInfiniteScroll: true, // Зацикливание карусели
-      enlargeCenterPage: true, // Увеличение текущей страницы
+      //enlargeCenterPage: true, // Увеличение текущей страницы
       autoPlay: true, // Автоматическое воспроизведение
       viewportFraction: 1.0, // Один слайдер виден целиком
       aspectRatio: 16 / 9, // Соотношение сторон изображений (примерно 16:9)
